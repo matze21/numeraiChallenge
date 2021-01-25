@@ -51,7 +51,7 @@ plt.plot(epoch_count, test_loss, 'b-')
 plt.legend(['Training Loss', 'Test Loss'])
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
-plt.show();
+plt.show()
 
 # model = sklearn.linear_model.LinearRegression(normalize = True)
 # model.fit(training_features, training_data.target)
