@@ -14,7 +14,7 @@ import time
 useValidationData=True
 
 tic = time.time()
-training_data = pd.read_csv("balancedTrainingData_test12021-01-31_2021-02-14.csv")
+training_data = pd.read_csv("balancedTrainingData_test12021-01-31_2021-02-21.csv")
 
 feature_cols = training_data.columns[training_data.columns.str.startswith('feature')]
 X_train = training_data[feature_cols].to_numpy()
@@ -24,13 +24,38 @@ toc = time.time()
 print("loaded the data took ", toc - tic)
 
 if useValidationData:
-    validation_data = pd.read_csv("data/numerai_datasets_17.01.21/numerai_validation_data.csv")
-    feature_cols_val = validation_data.columns[validation_data.columns.str.startswith('feature')]
-    validation_features = validation_data[feature_cols_val]
-    X_val = validation_features
+    validation_data = pd.read_csv("data/numerai_datasets_21.02.21/numerai_tournament_data.csv")
+    trainingData_class0   = validation_data.loc[validation_data.target == 0]
+    trainingData_class025 = validation_data.loc[validation_data.target == 0.25]
+    trainingData_class05  = validation_data.loc[validation_data.target == 0.5]
+    trainingData_class075 = validation_data.loc[validation_data.target == 0.75]
+    trainingData_class1   = validation_data.loc[validation_data.target == 1.0]      
+    X_label_0   = trainingData_class0[feature_cols].reset_index().drop(['index'], axis = 1)
+    X_label_025 = trainingData_class025[feature_cols].reset_index().drop(['index'], axis = 1)
+    X_label_05  = trainingData_class05[feature_cols].reset_index().drop(['index'], axis = 1)
+    X_label_075 = trainingData_class075[feature_cols].reset_index().drop(['index'], axis = 1)
+    X_label_1   = trainingData_class1[feature_cols].reset_index().drop(['index'], axis = 1)
+    Y_label_0   = trainingData_class0.target.reset_index().drop(['index'], axis = 1)
+    Y_label_025 = trainingData_class025.target.reset_index().drop(['index'], axis = 1)
+    Y_label_05  = trainingData_class05.target.reset_index().drop(['index'], axis = 1)
+    Y_label_075 = trainingData_class075.target.reset_index().drop(['index'], axis = 1)
+    Y_label_1   = trainingData_class1.target.reset_index().drop(['index'], axis = 1)
+
+    minLength = np.min([len(Y_label_0), len(Y_label_025), len(Y_label_05), len(Y_label_075), len(Y_label_1)])       
+    Y_val_data = Y_label_0.loc[0:minLength]
+    Y_val_data = Y_val_data.append(Y_label_025.loc[0:minLength], ignore_index = True)
+    Y_val_data = Y_val_data.append(Y_label_05.loc[0:minLength], ignore_index = True)
+    Y_val_data = Y_val_data.append(Y_label_075.loc[0:minLength], ignore_index = True)
+    Y_val_data = Y_val_data.append(Y_label_1.loc[0:minLength], ignore_index = True)       
+    X_val = X_label_0.loc[0:minLength]
+    X_val = X_val.append(X_label_025.loc[0:minLength], ignore_index = True)
+    X_val = X_val.append(X_label_05.loc[0:minLength], ignore_index = True)
+    X_val = X_val.append(X_label_075.loc[0:minLength], ignore_index = True)
+    X_val = X_val.append(X_label_1.loc[0:minLength], ignore_index = True)  
+
 
     j=0
-    Y_val_npArray = validation_data.target.to_numpy()
+    Y_val_npArray = Y_val_data.to_numpy()
     Y_val = np.zeros((Y_val_npArray.shape[0], 5))
     for j in range(Y_val_npArray.shape[0]):
         if Y_val_npArray[j] == 0:
@@ -60,21 +85,23 @@ opt = Adam(lr=0.00005, beta_1=0.9, beta_2=0.9, decay=1e-8)#learning_rates_dec[0]
 #model.compile(optimizer=opt, loss='mean_squared_error', metrics=['accuracy'])
 #model.compile(optimizer='adam', loss='mae', metrics=['mean_squared_error'])
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-#model.load_weights("model_moreData.h5")
+model.load_weights("model.h5")
 
 X_train, Y_train = shuffle(X_train, Y_train)
-n_valSet = 50000
-X_val_test = X_train[0:n_valSet,:]
-X_trainSet = X_train[n_valSet:X_train.shape[0]-1, :]
+n_valSet = 100000
+X_val_test = X_train#[0:n_valSet,:]
+X_trainSet = X_train#[n_valSet:X_train.shape[0]-1, :]
 
-Y_val_test = Y_train[0:n_valSet,:]
-Y_trainSet = Y_train[n_valSet:X_train.shape[0]-1,:]
+Y_val_test = Y_train#[0:n_valSet,:]
+Y_trainSet = Y_train#[n_valSet:X_train.shape[0]-1,:]
 
+Y_val_test = Y_val
+X_val_test = X_val
 
-history = model.fit(X_trainSet, Y_trainSet, epochs = 100, batch_size = 256*64*8*4, validation_data=(X_val_test, Y_val_test))
+history = model.fit(X_trainSet, Y_trainSet, epochs =200, batch_size = 256*64*2, validation_data=(X_val_test, Y_val_test))
 #import pdb; pdb.set_trace()
 
-model.save_weights("model_moreData_100epochs.h5")
+model.save_weights("model.h5")
 
 # Get training and test loss histories
 training_loss = history.history['loss']

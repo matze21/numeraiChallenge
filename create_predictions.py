@@ -19,7 +19,7 @@ model = keras_deepCNN.deepNN(validation_features.shape[1])
 #opt = Adam(lr=0.00001, beta_1=0.9, beta_2=0.999, decay=0e-8)#learning_rates_dec[0])
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.load_weights("model.h5")
+model.load_weights("model_98perAcc.h5")
 
 predictions = model.predict(X_val)
 
@@ -46,8 +46,8 @@ predictions_df.head()
 
 predictions_df.to_csv("predictions.csv", index=False)
 
-public_id  = "5PKOLW4ZJQDSMTC2QWPPG2QEHB427MFJ"
-secret_key = "I26YRNIBRQF47E6SO6VMLTLGN4O2MHL6ADUB4JNNQAYW3DPCH6JKY4HS5R2PYKLB"
-model_id   = "e994d440-764d-495d-8d60-7dbac3ac615b"
-napi = numerapi.NumerAPI(public_id=public_id, secret_key=secret_key)
-submission_id = napi.upload_predictions("predictions.csv", model_id=model_id)
+# public_id  = "5PKOLW4ZJQDSMTC2QWPPG2QEHB427MFJ"
+# secret_key = "I26YRNIBRQF47E6SO6VMLTLGN4O2MHL6ADUB4JNNQAYW3DPCH6JKY4HS5R2PYKLB"
+# model_id   = "e994d440-764d-495d-8d60-7dbac3ac615b"
+# napi = numerapi.NumerAPI(public_id=public_id, secret_key=secret_key)
+# submission_id = napi.upload_predictions("predictions.csv", model_id=model_id)

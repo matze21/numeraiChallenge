@@ -15,8 +15,11 @@ class makeDataBalanced():
         data = pd.DataFrame()
         test_path = path + test_date.strftime("%d.%m.%y")
         while os.path.exists(test_path):
-            balancedSet = self.makeTrainingDataBalanced(test_path + "/numerai_training_data.csv")
-            data = pd.concat([data, balancedSet], axis = 0)
+            balancedSet_trainingData = self.makeTrainingDataBalanced(test_path + "/numerai_training_data.csv")
+            data = pd.concat([data, balancedSet_trainingData], axis = 0)
+            if (test_date != date(2021,2, 21)):
+                balancedSet_trainingData = self.makeTrainingDataBalanced(test_path + "/numerai_tournament_data.csv")
+                data = pd.concat([data, balancedSet_trainingData], axis = 0)
             test_date = test_date + self.delta
             test_path = path + test_date.strftime("%d.%m.%y")
         data.to_csv('balancedTrainingData_test1' + str(self.start_date) + '_' + str(test_date - self.delta) + '.csv')
