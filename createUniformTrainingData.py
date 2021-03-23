@@ -17,7 +17,7 @@ class makeDataBalanced():
         while os.path.exists(test_path):
             balancedSet_trainingData = self.makeTrainingDataBalanced(test_path + "/numerai_training_data.csv")
             data = pd.concat([data, balancedSet_trainingData], axis = 0)
-            if (test_date != date(2021,2, 21)):
+            if (test_date != date(2021,3, 21)):
                 balancedSet_trainingData = self.makeTrainingDataBalanced(test_path + "/numerai_tournament_data.csv")
                 data = pd.concat([data, balancedSet_trainingData], axis = 0)
             test_date = test_date + self.delta
@@ -26,6 +26,7 @@ class makeDataBalanced():
         
     def makeTrainingDataBalanced(self, path_to_csv):
         training_data = pd.read_csv(str(path_to_csv))
+        training_data.drop_duplicates()
 
         # find only the feature columns
         feature_cols = training_data.columns[training_data.columns.str.startswith('feature')]
@@ -82,6 +83,7 @@ class makeDataBalanced():
 
         Y_trainDF = pd.DataFrame(Y_train, columns = ['label_0', 'label_025', 'label_05', 'label_075', 'label_1'])
         dataFrame = pd.concat([dataFrame, Y_trainDF], axis = 1)
+        dataFrame['target'] = Y_train_uniform
 
         return dataFrame
 

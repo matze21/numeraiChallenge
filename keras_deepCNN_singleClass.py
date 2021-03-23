@@ -9,18 +9,25 @@ def deepNN(n_inputFeatures):
 
     X_input = Input(shape=(n_inputFeatures,))
     X = BatchNormalization(axis = -1)(X_input)
-    X = Dense(n_inputFeatures, activation='relu', 
-    kernel_regularizer=regularizers.l1_l2(l1=3e-5, l2=4e-4),
-    bias_regularizer=regularizers.l2(5e-4),
-    activity_regularizer=regularizers.l2(1e-5))(X)
+    X = Dense(n_inputFeatures, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
     
-    size = 254
-    dropoutRate = 0.3
-    X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=3e-5, l2=9e-4), bias_regularizer=regularizers.l2(9e-4), activity_regularizer=regularizers.l2(2e-5))(X)
+    size = 1024
+    dropoutRate = 0.0
+    X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
     X = Dropout(dropoutRate, input_shape = (size,))(X)
-    X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=3e-5, l2=9e-4), bias_regularizer=regularizers.l2(9e-4), activity_regularizer=regularizers.l2(2e-5))(X)
+    X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
     X = Dropout(dropoutRate, input_shape = (size,))(X)
-    X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=3e-5, l2=9e-4), bias_regularizer=regularizers.l2(9e-4), activity_regularizer=regularizers.l2(2e-5))(X)
+    X = Dense(size/2, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
+    X = Dropout(dropoutRate, input_shape = (size,))(X)
+    X = Dense(size/4, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
+    X = Dropout(dropoutRate, input_shape = (size,))(X)
+    X = Dense(size/8, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
+    X = Dropout(dropoutRate, input_shape = (size,))(X)
+    X = Dense(size/16, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
+    X = Dropout(dropoutRate, input_shape = (size,))(X)
+    X = Dense(size/32, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
+    X = Dropout(dropoutRate, input_shape = (size,))(X)
+    X = Dense(size/64, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
     X = Dropout(dropoutRate, input_shape = (size,))(X)
 
     X = Dense(1, activation="sigmoid")(X)
