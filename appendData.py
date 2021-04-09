@@ -6,7 +6,7 @@ import os
 
 class makeDataBalanced():
     def __init__(self):
-        self.start_date = date(2021,1, 31)
+        self.start_date = date(2021,2, 28)
         self.delta = timedelta(days=7)
         
     def mergeTrainingDataDF(self):

@@ -2,8 +2,9 @@ from tensorflow.keras.layers import Input, Add, Dense, Activation, ZeroPadding2D
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras import regularizers
 
-regularizationConst_l1 = 0.0005
-regularizationConst_l2 = 0.0005
+regularizationConst_l1 = 0.00001
+regularizationConst_l2 = 0.00001
+activation = "tanh"
 
 def deepNN(n_inputFeatures):
 
@@ -12,7 +13,7 @@ def deepNN(n_inputFeatures):
     X = Dense(n_inputFeatures, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
     
     size = 1024
-    dropoutRate = 0.0
+    dropoutRate = 0.1
     X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
     X = Dropout(dropoutRate, input_shape = (size,))(X)
     X = Dense(size, activation='relu', kernel_regularizer=regularizers.l1_l2(l1=regularizationConst_l1, l2=regularizationConst_l2), bias_regularizer=regularizers.l2(regularizationConst_l2), activity_regularizer=regularizers.l2(regularizationConst_l2))(X)
