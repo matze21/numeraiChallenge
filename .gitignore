@@ -1,0 +1,9 @@
+# Instead of the usual blacklisting, we disallow everything in the first step
+# and then whitelist specific folders which then again can ignore specific files or file types
+# This way it is easier to manage which IMS folders should be included in the Git sync
+
+# Ignore folders
+.ipynb_checkpoints/
+old models/
+data/
+__pycache__/
